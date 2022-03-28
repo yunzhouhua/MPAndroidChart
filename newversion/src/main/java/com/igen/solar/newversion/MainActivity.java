@@ -182,25 +182,25 @@ public class MainActivity extends AppCompatActivity {
                         sb.append("0");
                     }
                     sb.append(hour + ":");
-                    int halfHour = leftSeconds / 1800;
-                    if(halfHour >= 1){
-                        sb.append("30");
+                    int minute = leftSeconds / 60;
+                    int seconds = leftSeconds % 60;
+                    if(minute < 10){
+                        sb.append("0" + minute);
                     }else{
-                        sb.append("00");
+                        sb.append("" + minute);
                     }
 
                     Log.e("TAG", "value = " + value + "\n" +
                             "\thour: " + hour + "\n" +
                             "\tleftSeconds： " + leftSeconds + "\n"+
-                            "\tminute: " + halfHour + "\n" +
+                            "\tminute: " + minute + "\n" +
                             "\tresult: " + sb.toString() + "\n\n ");
 
                     return sb.toString();
                 }
             });
             xAxis.setAxisMinimum(0.0f);
-//            xAxis.setAxisMaximum(86400.0f);
-            xAxis.setAxisMaximum(87000.0f);
+            xAxis.setAxisMaximum(86400.0f);
             xAxis.setGranularity(1800);
             xAxis.setTextColor(Color.parseColor("#92959C"));
             xAxis.setLabelCount(8, false);
