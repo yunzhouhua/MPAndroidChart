@@ -46,8 +46,6 @@ import com.xxmassdeveloper.mpchartexample.ScrollViewActivity;
 import com.xxmassdeveloper.mpchartexample.StackedBarActivity;
 import com.xxmassdeveloper.mpchartexample.StackedBarActivityNegative;
 import com.xxmassdeveloper.mpchartexample.fragments.SimpleChartDemo;
-import com.xxmassdeveloper.mpchartexample.mytest.BarChartDemoActivity;
-import com.xxmassdeveloper.mpchartexample.mytest.LineChartDemoActivity;
 
 import java.util.ArrayList;
 

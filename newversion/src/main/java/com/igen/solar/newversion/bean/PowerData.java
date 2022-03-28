@@ -1,4 +1,4 @@
-package com.xxmassdeveloper.mpchartexample.bean;
+package com.igen.solar.newversion.bean;
 
 public class PowerData {
     private long dateTime;

@@ -1,4 +1,4 @@
-package com.xxmassdeveloper.mpchartexample.mytest;
+package com.igen.solar.newversion;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -26,8 +26,8 @@ import com.github.mikephil.charting.utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.xxmassdeveloper.mpchartexample.R;
-import com.xxmassdeveloper.mpchartexample.bean.PowerData;
+import com.igen.solar.newversion.bean.PowerData;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class LineChartDemoActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     private LineChart chart;
 
@@ -50,7 +50,7 @@ public class LineChartDemoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_line_chart_demo);
+        setContentView(R.layout.activity_main);
 
         setTitle("折线图Demo");
 
@@ -338,7 +338,6 @@ public class LineChartDemoActivity extends AppCompatActivity {
         // set color of filled area
         if (Utils.getSDKInt() >= 18) {
             // drawables only supported on api level 18 and above
-            Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
             GradientDrawable drawable1 = new GradientDrawable();
             drawable1.setShape(GradientDrawable.RECTANGLE);
             int[] colors = {Color.parseColor("#99" + rgb), Color.parseColor("#99" + rgb), Color.parseColor("#33" + rgb)};

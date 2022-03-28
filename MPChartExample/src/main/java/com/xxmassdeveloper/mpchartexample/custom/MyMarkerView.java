@@ -3,6 +3,7 @@ package com.xxmassdeveloper.mpchartexample.custom;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.components.MarkerView;
@@ -12,6 +13,7 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
 import com.xxmassdeveloper.mpchartexample.R;
+import com.xxmassdeveloper.mpchartexample.mytest.LogUtils;
 
 /**
  * Custom implementation of the MarkerView.
@@ -33,6 +35,7 @@ public class MyMarkerView extends MarkerView {
     // content (user-interface)
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
+        Log.e(LogUtils.LogTag, "refreshContent: " + highlight.toString() );
 
         if (e instanceof CandleEntry) {
 
