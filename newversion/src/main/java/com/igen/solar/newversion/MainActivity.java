@@ -124,6 +124,9 @@ public class MainActivity extends AppCompatActivity {
         // set data
         chart.setData(data);
 
+
+
+
     }
 
     private void initCharts() {

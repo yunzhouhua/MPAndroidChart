@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.igen.solar.newversion.render.IGENLineChartRenderer;
+import com.igen.solar.newversion.render.Time24HXAxisRenderer;
 
 public class IGenLineChart extends LineChart {
     public IGenLineChart(Context context) {
@@ -22,6 +24,7 @@ public class IGenLineChart extends LineChart {
     protected void init() {
         super.init();
 
+        mRenderer = new IGENLineChartRenderer(this, mAnimator, mViewPortHandler);
         mXAxisRenderer = new Time24HXAxisRenderer(mViewPortHandler, mXAxis, mLeftAxisTransformer);
 
     }
