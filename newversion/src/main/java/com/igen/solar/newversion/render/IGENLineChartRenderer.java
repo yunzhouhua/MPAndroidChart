@@ -34,14 +34,14 @@ public class IGENLineChartRenderer extends LineChartRenderer {
     }, 0f);
     private Paint mDotPaint;
 
-    private float DotRadius = 5f;
+    private float DotRadius = 6f;
 
     public IGENLineChartRenderer(LineDataProvider chart, ChartAnimator animator, ViewPortHandler viewPortHandler) {
         super(chart, animator, viewPortHandler);
 
         mDotPaint = new Paint();
         mDotPaint.setAntiAlias(true);
-        mDotPaint.setStyle(Paint.Style.STROKE);
+        mDotPaint.setStyle(Paint.Style.FILL);
     }
 
     @Override
@@ -72,13 +72,15 @@ public class IGENLineChartRenderer extends LineChartRenderer {
         drawHighlightLine(c, (float) pix.x, (float) pix.y);
 
         // 绘制高亮点
-        mDotPaint.setStrokeWidth(5);
         for (int i = 0; i < entryList.size(); i++) {
             MPPointD tmpPix = mChart.getTransformer(YAxis.AxisDependency.LEFT).getPixelForValues(targetX,
                     (float) ((entryList.get(i).getY() - DotRadius) * mAnimator.getPhaseY()));
             mDotPaint.setColor(colorList.get(i));
 
             c.drawCircle((float) tmpPix.x, (float) tmpPix.y, DotRadius, mDotPaint);
+
+            mDotPaint.setColor(Color.WHITE);
+            c.drawCircle((float) tmpPix.x, (float) tmpPix.y, DotRadius - 3, mDotPaint);
         }
 
     }
