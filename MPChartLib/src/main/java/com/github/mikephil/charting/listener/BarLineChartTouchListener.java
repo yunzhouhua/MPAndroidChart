@@ -42,16 +42,18 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
     /**
      * point where the touch action started
      */
-    private MPPointF mTouchStartPoint = MPPointF.getInstance(0,0);
+    private MPPointF mTouchStartPoint = MPPointF.getInstance(0, 0);
 
     /**
      * center between two pointers (fingers on the display)
      */
-    private MPPointF mTouchPointCenter = MPPointF.getInstance(0,0);
+    private MPPointF mTouchPointCenter = MPPointF.getInstance(0, 0);
 
     private float mSavedXDist = 1f;
     private float mSavedYDist = 1f;
     private float mSavedDist = 1f;
+    // 控制是否需要设置初始化点，避免两指滑动过近，导致触发ACTION_POINT_UP后又触发ACTION_POINT_DOWN事件，导致重复设置起始点
+    private boolean needStartSaved = true;
 
     private IDataSet mClosestDataSetToTouch;
 
@@ -61,8 +63,8 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
     private VelocityTracker mVelocityTracker;
 
     private long mDecelerationLastTime = 0;
-    private MPPointF mDecelerationCurrentPoint = MPPointF.getInstance(0,0);
-    private MPPointF mDecelerationVelocity = MPPointF.getInstance(0,0);
+    private MPPointF mDecelerationCurrentPoint = MPPointF.getInstance(0, 0);
+    private MPPointF mDecelerationVelocity = MPPointF.getInstance(0, 0);
 
     /**
      * the distance of movement that will be counted as a drag
@@ -88,8 +90,8 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
         this.mMatrix = touchMatrix;
 
         this.mDragTriggerDist = Utils.convertDpToPixel(dragTriggerDistance);
-
-        this.mMinScalePointerDistance = Utils.convertDpToPixel(3.5f);
+        // 修改最小间隔值
+        this.mMinScalePointerDistance = Utils.convertDpToPixel(10f);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -134,18 +136,22 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
 
                     mChart.disableScroll();
 
-                    saveTouchStart(event);
+                    if(needStartSaved){
+                        saveTouchStart(event);
 
-                    // get the distance between the pointers on the x-axis
-                    mSavedXDist = getXDist(event);
+                        // get the distance between the pointers on the x-axis
+                        mSavedXDist = getXDist(event);
 
-                    // get the distance between the pointers on the y-axis
-                    mSavedYDist = getYDist(event);
+                        // get the distance between the pointers on the y-axis
+                        mSavedYDist = getYDist(event);
 
-                    // get the total distance between the pointers
-                    mSavedDist = spacing(event);
+                        // get the total distance between the pointers
+                        mSavedDist = spacing(event);
+                        needStartSaved = false;
+                    }
 
-                    if (mSavedDist > 10f) {
+                    // if (mSavedDist > 10f) {
+                    if (mSavedDist > mMinScalePointerDistance) {
 
                         if (mChart.isPinchZoomEnabled()) {
                             mTouchMode = PINCH_ZOOM;
@@ -265,6 +271,9 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                     mVelocityTracker.recycle();
                     mVelocityTracker = null;
                 }
+                if(!needStartSaved){
+                    needStartSaved = true;
+                }
 
                 endAction(event);
 
@@ -278,6 +287,9 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
             case MotionEvent.ACTION_CANCEL:
 
                 mTouchMode = NONE;
+                if(!needStartSaved){
+                    needStartSaved = true;
+                }
                 endAction(event);
                 break;
         }

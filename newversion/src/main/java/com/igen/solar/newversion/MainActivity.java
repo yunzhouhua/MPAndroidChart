@@ -204,13 +204,13 @@ public class MainActivity extends AppCompatActivity {
             });
             xAxis.setAxisMinimum(0.0f);
             xAxis.setAxisMaximum(86400.0f);
-            xAxis.setGranularity(1800);
+            xAxis.setGranularity(15 * 60);
             xAxis.setTextColor(Color.parseColor("#92959C"));
             xAxis.setLabelCount(8, false);
         }
 
         chart.setScaleYEnabled(false);
-        chart.setVisibleXRangeMinimum(1800 * 8);
+        chart.setVisibleXRangeMinimum(15 * 60 * 8);
 
         YAxis yAxis;
         {   // // Y-Axis Style // //
