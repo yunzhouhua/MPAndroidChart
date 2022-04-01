@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.DAY_OF_MONTH, 23);
+        calendar.set(Calendar.MONTH, 2);
         ZeroTimestamp = calendar.getTimeInMillis() / 1000;
 
 
