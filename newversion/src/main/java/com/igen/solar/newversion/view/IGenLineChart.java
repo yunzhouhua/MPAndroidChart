@@ -26,6 +26,5 @@ public class IGenLineChart extends LineChart {
 
         mRenderer = new IGENLineChartRenderer(this, mAnimator, mViewPortHandler);
         mXAxisRenderer = new Time24HXAxisRenderer(mViewPortHandler, mXAxis, mLeftAxisTransformer);
-
     }
 }

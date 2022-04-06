@@ -10,17 +10,22 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IFillFormatter;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.Utils;
 import com.google.gson.Gson;
@@ -36,10 +41,12 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
     private LineChart chart;
+    private BarChart mYearBarChart;
 
     private long ZeroTimestamp = 0;
 
@@ -54,6 +61,73 @@ public class MainActivity extends AppCompatActivity {
 
         setTitle("折线图Demo");
 
+        initLineChart();
+        initYearBarChart();
+    }
+
+
+    private void initYearBarChart() {
+        mYearBarChart = findViewById(R.id.bar_chart_year);
+
+        mYearBarChart.getDescription().setEnabled(false);
+        mYearBarChart.getLegend().setEnabled(true);
+
+        XAxis xAxis = mYearBarChart.getXAxis();
+        xAxis.setAxisMinimum(1);
+        xAxis.setAxisMaximum(31f);
+        xAxis.setCenterAxisLabels(true);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+
+        xAxis.setLabelCount(17);
+        xAxis.setGranularity(1);
+
+//        xAxis.setValueFormatter(new IAxisValueFormatter() {
+//            @Override
+//            public String getFormattedValue(float value, AxisBase axis) {
+//                Log.e("BarLine", "getFormattedValue: " + value);
+//                if (value == 0.0f) {
+//                    return "";
+//                } else {
+//                    return String.valueOf((int) value);
+//                }
+//            }
+//        });
+
+
+        YAxis leftAxis = mYearBarChart.getAxisLeft();
+        leftAxis.setAxisMinimum(0.0f);
+
+        YAxis rightAxis = mYearBarChart.getAxisRight();
+        rightAxis.setEnabled(false);
+
+
+        List<IBarDataSet> dataSets = new ArrayList<>();
+        for (int j = 0; j < 4; j++) {
+            ArrayList<BarEntry> values = new ArrayList<>();
+            for (int i = 0; i < 30; i++) {
+                values.add(new BarEntry(i + 1, (float) (Math.random() * 1000)));
+            }
+            BarDataSet set = new BarDataSet(values, "Bar " + (j + 1));
+            set.setColor(randomColor());
+            dataSets.add(set);
+        }
+
+        float groupSpace = 0.16f;
+        float barSpace = 0.02f;
+        float barWidth = (1 - groupSpace) / dataSets.size() - barSpace;
+
+
+        BarData data = new BarData(dataSets);
+        data.setBarWidth(barWidth);
+        data.groupBars(1, groupSpace, barSpace);
+        mYearBarChart.setData(data);
+        mYearBarChart.setVisibleXRangeMinimum(1);
+        mYearBarChart.setScaleYEnabled(false);
+
+    }
+
+    // 折线图
+    private void initLineChart() {
         initCharts();
 
         String[] fileList = {"data_03_20.json", "data_03_21.json", "data_03_23.json"};
@@ -63,9 +137,9 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < dataResult.size(); i++) {
             if (dataResult.get(i) != null) {
                 for (PowerData pd : dataResult.get(i)) {
-                    if(i < 2) {
+                    if (i < 2) {
                         pd.setDateTime(pd.getDateTime() + (3 - i) * 86400L);
-                    }else{
+                    } else {
                         pd.setDateTime(pd.getDateTime() + (2 - i) * 86400L);
                     }
                 }
@@ -86,12 +160,12 @@ public class MainActivity extends AppCompatActivity {
         // 计算Y轴 最大最小值
         yMax = dataResult.get(0).get(0).getGenerationPower();
         yMin = dataResult.get(0).get(0).getGenerationPower();
-        for(List<PowerData> tmp : dataResult){
-            if(tmp != null){
-                for(PowerData pd : tmp){
-                    if(pd.getGenerationPower() > yMax){
+        for (List<PowerData> tmp : dataResult) {
+            if (tmp != null) {
+                for (PowerData pd : tmp) {
+                    if (pd.getGenerationPower() > yMax) {
                         yMax = pd.getGenerationPower();
-                    }else if(pd.getGenerationPower() < yMin){
+                    } else if (pd.getGenerationPower() < yMin) {
                         yMin = pd.getGenerationPower();
                     }
                 }
@@ -124,10 +198,6 @@ public class MainActivity extends AppCompatActivity {
 
         // set data
         chart.setData(data);
-
-
-
-
     }
 
     private void initCharts() {
@@ -182,21 +252,21 @@ public class MainActivity extends AppCompatActivity {
                     int hour = (int) (value / 3600);
                     int leftSeconds = (int) (value % 3600);
                     StringBuilder sb = new StringBuilder();
-                    if(hour < 10){
+                    if (hour < 10) {
                         sb.append("0");
                     }
                     sb.append(hour + ":");
                     int minute = leftSeconds / 60;
                     int seconds = leftSeconds % 60;
-                    if(minute < 10){
+                    if (minute < 10) {
                         sb.append("0" + minute);
-                    }else{
+                    } else {
                         sb.append("" + minute);
                     }
 
                     Log.e("TAG", "value = " + value + "\n" +
                             "\thour: " + hour + "\n" +
-                            "\tleftSeconds： " + leftSeconds + "\n"+
+                            "\tleftSeconds： " + leftSeconds + "\n" +
                             "\tminute: " + minute + "\n" +
                             "\tresult: " + sb.toString() + "\n\n ");
 
@@ -231,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
             yAxis.setValueFormatter(new IAxisValueFormatter() {
                 @Override
                 public String getFormattedValue(float value, AxisBase axis) {
-                    return String.valueOf((int)(value / 10000));
+                    return String.valueOf((int) (value / 10000));
                 }
             });
             yAxis.setTextColor(Color.parseColor("#92959C"));
@@ -354,5 +424,13 @@ public class MainActivity extends AppCompatActivity {
 
         return set1;
 
+    }
+
+    private int randomColor() {
+        Random random = new Random();
+        int red = random.nextInt(256);
+        int green = random.nextInt(256);
+        int blue = random.nextInt(256);
+        return Color.rgb(red, green, blue);
     }
 }
