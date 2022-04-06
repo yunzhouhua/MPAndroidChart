@@ -32,6 +32,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.igen.solar.newversion.bean.PowerData;
+import com.igen.solar.newversion.render.IGENBarChartRenderer;
 
 
 import java.io.BufferedReader;
@@ -68,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void initYearBarChart() {
         mYearBarChart = findViewById(R.id.bar_chart_year);
+
+        mYearBarChart.setRenderer(new IGENBarChartRenderer(mYearBarChart, mYearBarChart.getAnimator(), mYearBarChart.getViewPortHandler()));
 
         mYearBarChart.getDescription().setEnabled(false);
         mYearBarChart.getLegend().setEnabled(true);
