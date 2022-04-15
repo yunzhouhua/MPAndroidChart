@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
         setTitle("折线图Demo");
 
-        initLineChart();
+//        initLineChart();
         initYearBarChart();
     }
 
@@ -70,16 +70,22 @@ public class MainActivity extends AppCompatActivity {
     private void initYearBarChart() {
         mYearBarChart = findViewById(R.id.bar_chart_year);
 
+        mYearBarChart.setBackgroundColor(Color.RED);
+
         mYearBarChart.setRenderer(new IGENBarChartRenderer(mYearBarChart, mYearBarChart.getAnimator(), mYearBarChart.getViewPortHandler()));
 
         mYearBarChart.getDescription().setEnabled(false);
-        mYearBarChart.getLegend().setEnabled(true);
+        mYearBarChart.getLegend().setEnabled(false);
+
+        mYearBarChart.setMinOffset(18.0f);
+
 
         XAxis xAxis = mYearBarChart.getXAxis();
         xAxis.setAxisMinimum(1);
         xAxis.setAxisMaximum(31f);
         xAxis.setCenterAxisLabels(true);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setYOffset(5);
 
         xAxis.setLabelCount(17);
         xAxis.setGranularity(1);
@@ -98,10 +104,14 @@ public class MainActivity extends AppCompatActivity {
 
 
         YAxis leftAxis = mYearBarChart.getAxisLeft();
-        leftAxis.setAxisMinimum(0.0f);
+//        leftAxis.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+//        leftAxis.setAxisMinimum(0.0f);
+        leftAxis.setUnitYOffset(5);
 
         YAxis rightAxis = mYearBarChart.getAxisRight();
-        rightAxis.setEnabled(false);
+        rightAxis.setEnabled(true);
+//        rightAxis.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+        rightAxis.setUnitYOffset(5);
 
 
         List<IBarDataSet> dataSets = new ArrayList<>();
@@ -130,197 +140,197 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // 折线图
-    private void initLineChart() {
-        initCharts();
-
-        String[] fileList = {"data_03_20.json", "data_03_21.json", "data_03_23.json"};
-        List<List<PowerData>> dataResult = readData(fileList);
-
-        // 时间同步
-        for (int i = 0; i < dataResult.size(); i++) {
-            if (dataResult.get(i) != null) {
-                for (PowerData pd : dataResult.get(i)) {
-                    if (i < 2) {
-                        pd.setDateTime(pd.getDateTime() + (3 - i) * 86400L);
-                    } else {
-                        pd.setDateTime(pd.getDateTime() + (2 - i) * 86400L);
-                    }
-                }
-            }
-        }
-
-        // 过滤空值结果
-        for (int i = 0; i < dataResult.size(); i++) {
-            if (dataResult.get(i) != null) {
-                for (int j = dataResult.get(i).size() - 1; j >= 0; j--) {
-                    if (dataResult.get(i).get(j).getGenerationPower() == null) {
-                        dataResult.get(i).remove(j);
-                    }
-                }
-            }
-        }
-
-        // 计算Y轴 最大最小值
-        yMax = dataResult.get(0).get(0).getGenerationPower();
-        yMin = dataResult.get(0).get(0).getGenerationPower();
-        for (List<PowerData> tmp : dataResult) {
-            if (tmp != null) {
-                for (PowerData pd : tmp) {
-                    if (pd.getGenerationPower() > yMax) {
-                        yMax = pd.getGenerationPower();
-                    } else if (pd.getGenerationPower() < yMin) {
-                        yMin = pd.getGenerationPower();
-                    }
-                }
-            }
-        }
-        YAxis yAxis = chart.getAxisLeft();
-        yAxis.setAxisMinimum(0.0f);
-        yAxis.setAxisMaximum((float) (yMax * 1.2));
-
-        // 计算当日零点时间戳
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.DAY_OF_MONTH, 23);
-        calendar.set(Calendar.MONTH, 2);
-        ZeroTimestamp = calendar.getTimeInMillis() / 1000;
-
-
-        // add Data
-        String[] colors = {"E93F37", "7AB2FF", "3BBCAD"};
-
-
-        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-        for (int z = 0; z < dataResult.size(); z++) {
-            dataSets.add(formatData(z, dataResult.get(z), colors[z]));
-        }
-        // create a data object with the data sets
-        LineData data = new LineData(dataSets);
-
-        // set data
-        chart.setData(data);
-    }
-
-    private void initCharts() {
-        {   // // Chart Style // //
-            chart = findViewById(R.id.chart1);
-
-            // background color
-            chart.setBackgroundColor(Color.WHITE);
-
-            // disable description text
-            chart.getDescription().setEnabled(false);
-
-            // enable touch gestures
-            chart.setTouchEnabled(true);
-
-            chart.setGridBackgroundColor(Color.WHITE);
-
-            // set listeners
-//            chart.setOnChartValueSelectedListener(this);
-            chart.setDrawGridBackground(false);
-
-            // create marker to display box when values are selected
-//            MyMarkerView mv = new MyMarkerView(this, R.layout.custom_marker_view);
+//    private void initLineChart() {
+//        initCharts();
 //
-//            // Set the marker to the chart
-//            mv.setChartView(chart);
-//            chart.setMarker(mv);
+//        String[] fileList = {"data_03_20.json", "data_03_21.json", "data_03_23.json"};
+//        List<List<PowerData>> dataResult = readData(fileList);
+//
+//        // 时间同步
+//        for (int i = 0; i < dataResult.size(); i++) {
+//            if (dataResult.get(i) != null) {
+//                for (PowerData pd : dataResult.get(i)) {
+//                    if (i < 2) {
+//                        pd.setDateTime(pd.getDateTime() + (3 - i) * 86400L);
+//                    } else {
+//                        pd.setDateTime(pd.getDateTime() + (2 - i) * 86400L);
+//                    }
+//                }
+//            }
+//        }
+//
+//        // 过滤空值结果
+//        for (int i = 0; i < dataResult.size(); i++) {
+//            if (dataResult.get(i) != null) {
+//                for (int j = dataResult.get(i).size() - 1; j >= 0; j--) {
+//                    if (dataResult.get(i).get(j).getGenerationPower() == null) {
+//                        dataResult.get(i).remove(j);
+//                    }
+//                }
+//            }
+//        }
+//
+//        // 计算Y轴 最大最小值
+//        yMax = dataResult.get(0).get(0).getGenerationPower();
+//        yMin = dataResult.get(0).get(0).getGenerationPower();
+//        for (List<PowerData> tmp : dataResult) {
+//            if (tmp != null) {
+//                for (PowerData pd : tmp) {
+//                    if (pd.getGenerationPower() > yMax) {
+//                        yMax = pd.getGenerationPower();
+//                    } else if (pd.getGenerationPower() < yMin) {
+//                        yMin = pd.getGenerationPower();
+//                    }
+//                }
+//            }
+//        }
+//        YAxis yAxis = chart.getAxisLeft();
+//        yAxis.setAxisMinimum(0.0f);
+//        yAxis.setAxisMaximum((float) (yMax * 1.2));
+//
+//        // 计算当日零点时间戳
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.set(Calendar.SECOND, 0);
+//        calendar.set(Calendar.MINUTE, 0);
+//        calendar.set(Calendar.HOUR_OF_DAY, 0);
+//        calendar.set(Calendar.DAY_OF_MONTH, 23);
+//        calendar.set(Calendar.MONTH, 2);
+//        ZeroTimestamp = calendar.getTimeInMillis() / 1000;
+//
+//
+//        // add Data
+//        String[] colors = {"E93F37", "7AB2FF", "3BBCAD"};
+//
+//
+//        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+//        for (int z = 0; z < dataResult.size(); z++) {
+//            dataSets.add(formatData(z, dataResult.get(z), colors[z]));
+//        }
+//        // create a data object with the data sets
+//        LineData data = new LineData(dataSets);
+//
+//        // set data
+//        chart.setData(data);
+//    }
 
-            // enable scaling and dragging
-            chart.setDragEnabled(true);
-            chart.setScaleEnabled(true);
-            chart.setDoubleTapToZoomEnabled(false);
-            // chart.setScaleXEnabled(true);
-            // chart.setScaleYEnabled(true);
-
-            // force pinch zoom along both axis
-//            chart.setPinchZoom(true);
-        }
-
-        XAxis xAxis;
-        {   // // X-Axis Style // //
-            xAxis = chart.getXAxis();
-
-            // vertical grid lines
-            xAxis.enableGridDashedLine(10f, 0f, 0f);
-            xAxis.setGridColor(Color.parseColor("#E5E5E8"));
-
-            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-            xAxis.setValueFormatter(new IAxisValueFormatter() {
-                @Override
-                public String getFormattedValue(float value, AxisBase axis) {
-                    int hour = (int) (value / 3600);
-                    int leftSeconds = (int) (value % 3600);
-                    StringBuilder sb = new StringBuilder();
-                    if (hour < 10) {
-                        sb.append("0");
-                    }
-                    sb.append(hour + ":");
-                    int minute = leftSeconds / 60;
-                    int seconds = leftSeconds % 60;
-                    if (minute < 10) {
-                        sb.append("0" + minute);
-                    } else {
-                        sb.append("" + minute);
-                    }
-
-                    Log.e("TAG", "value = " + value + "\n" +
-                            "\thour: " + hour + "\n" +
-                            "\tleftSeconds： " + leftSeconds + "\n" +
-                            "\tminute: " + minute + "\n" +
-                            "\tresult: " + sb.toString() + "\n\n ");
-
-                    return sb.toString();
-                }
-            });
-            xAxis.setAxisMinimum(0.0f);
-            xAxis.setAxisMaximum(86400.0f);
-            xAxis.setGranularity(15 * 60);
-            xAxis.setTextColor(Color.parseColor("#92959C"));
-            xAxis.setLabelCount(8, false);
-        }
-
-        chart.setScaleYEnabled(false);
-        chart.setVisibleXRangeMinimum(15 * 60 * 8);
-
-        YAxis yAxis;
-        {   // // Y-Axis Style // //
-            yAxis = chart.getAxisLeft();
-
-            // disable dual axis (only use LEFT axis)
-            chart.getAxisRight().setEnabled(false);
-
-            // horizontal grid lines
-            yAxis.enableGridDashedLine(10f, 0f, 0f);
-            yAxis.setGridColor(Color.parseColor("#E5E5E8"));
-
-            // axis range
-            yAxis.setAxisMaximum(200f);
-            yAxis.setAxisMinimum(-50f);
-
-            yAxis.setValueFormatter(new IAxisValueFormatter() {
-                @Override
-                public String getFormattedValue(float value, AxisBase axis) {
-                    return String.valueOf((int) (value / 10000));
-                }
-            });
-            yAxis.setTextColor(Color.parseColor("#92959C"));
-        }
-
-
-        // draw points over time
-//        chart.animateX(1500);
-
-        // get the legend (only possible after setting data)
-        Legend l = chart.getLegend();
-
-        // draw legend entries as lines
-        l.setForm(Legend.LegendForm.SQUARE);
-        l.setEnabled(false);
-    }
+//    private void initCharts() {
+//        {   // // Chart Style // //
+//            chart = findViewById(R.id.chart1);
+//
+//            // background color
+//            chart.setBackgroundColor(Color.WHITE);
+//
+//            // disable description text
+//            chart.getDescription().setEnabled(false);
+//
+//            // enable touch gestures
+//            chart.setTouchEnabled(true);
+//
+//            chart.setGridBackgroundColor(Color.WHITE);
+//
+//            // set listeners
+////            chart.setOnChartValueSelectedListener(this);
+//            chart.setDrawGridBackground(false);
+//
+//            // create marker to display box when values are selected
+////            MyMarkerView mv = new MyMarkerView(this, R.layout.custom_marker_view);
+////
+////            // Set the marker to the chart
+////            mv.setChartView(chart);
+////            chart.setMarker(mv);
+//
+//            // enable scaling and dragging
+//            chart.setDragEnabled(true);
+//            chart.setScaleEnabled(true);
+//            chart.setDoubleTapToZoomEnabled(false);
+//            // chart.setScaleXEnabled(true);
+//            // chart.setScaleYEnabled(true);
+//
+//            // force pinch zoom along both axis
+////            chart.setPinchZoom(true);
+//        }
+//
+//        XAxis xAxis;
+//        {   // // X-Axis Style // //
+//            xAxis = chart.getXAxis();
+//
+//            // vertical grid lines
+//            xAxis.enableGridDashedLine(10f, 0f, 0f);
+//            xAxis.setGridColor(Color.parseColor("#E5E5E8"));
+//
+//            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+//            xAxis.setValueFormatter(new IAxisValueFormatter() {
+//                @Override
+//                public String getFormattedValue(float value, AxisBase axis) {
+//                    int hour = (int) (value / 3600);
+//                    int leftSeconds = (int) (value % 3600);
+//                    StringBuilder sb = new StringBuilder();
+//                    if (hour < 10) {
+//                        sb.append("0");
+//                    }
+//                    sb.append(hour + ":");
+//                    int minute = leftSeconds / 60;
+//                    int seconds = leftSeconds % 60;
+//                    if (minute < 10) {
+//                        sb.append("0" + minute);
+//                    } else {
+//                        sb.append("" + minute);
+//                    }
+//
+//                    Log.e("TAG", "value = " + value + "\n" +
+//                            "\thour: " + hour + "\n" +
+//                            "\tleftSeconds： " + leftSeconds + "\n" +
+//                            "\tminute: " + minute + "\n" +
+//                            "\tresult: " + sb.toString() + "\n\n ");
+//
+//                    return sb.toString();
+//                }
+//            });
+//            xAxis.setAxisMinimum(0.0f);
+//            xAxis.setAxisMaximum(86400.0f);
+//            xAxis.setGranularity(15 * 60);
+//            xAxis.setTextColor(Color.parseColor("#92959C"));
+//            xAxis.setLabelCount(8, false);
+//        }
+//
+//        chart.setScaleYEnabled(false);
+//        chart.setVisibleXRangeMinimum(15 * 60 * 8);
+//
+//        YAxis yAxis;
+//        {   // // Y-Axis Style // //
+//            yAxis = chart.getAxisLeft();
+//
+//            // disable dual axis (only use LEFT axis)
+//            chart.getAxisRight().setEnabled(false);
+//
+//            // horizontal grid lines
+//            yAxis.enableGridDashedLine(10f, 0f, 0f);
+//            yAxis.setGridColor(Color.parseColor("#E5E5E8"));
+//
+//            // axis range
+//            yAxis.setAxisMaximum(200f);
+//            yAxis.setAxisMinimum(-50f);
+//
+//            yAxis.setValueFormatter(new IAxisValueFormatter() {
+//                @Override
+//                public String getFormattedValue(float value, AxisBase axis) {
+//                    return String.valueOf((int) (value / 10000));
+//                }
+//            });
+//            yAxis.setTextColor(Color.parseColor("#92959C"));
+//        }
+//
+//
+//        // draw points over time
+////        chart.animateX(1500);
+//
+//        // get the legend (only possible after setting data)
+//        Legend l = chart.getLegend();
+//
+//        // draw legend entries as lines
+//        l.setForm(Legend.LegendForm.SQUARE);
+//        l.setEnabled(false);
+//    }
 
     private List<List<PowerData>> readData(String[] fileNameList) {
         List<List<PowerData>> result = new ArrayList<>();

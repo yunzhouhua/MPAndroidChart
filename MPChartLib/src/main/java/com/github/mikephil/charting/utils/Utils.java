@@ -569,7 +569,9 @@ public abstract class Utils {
         // Android does not snap the bounds to line boundaries,
         //  and draws from bottom to top.
         // And we want to normalize it.
-        drawOffsetY += -mFontMetricsBuffer.ascent;
+        // TODO 修改点
+//        drawOffsetY += -mFontMetricsBuffer.ascent;
+        drawOffsetY  += (mDrawTextRectBuffer.bottom - mDrawTextRectBuffer.top);
 
         // To have a consistent point of reference, we always draw left-aligned
         Paint.Align originalTextAlign = paint.getTextAlign();

@@ -10,6 +10,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.RectF;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -272,6 +273,10 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         mAxisRendererLeft.renderAxisLabels(canvas);
         mAxisRendererRight.renderAxisLabels(canvas);
 
+        // 绘制Y轴单位
+        mAxisRendererLeft.renderAxisUnit(canvas);
+        mAxisRendererRight.renderAxisUnit(canvas);
+
         if (isClipValuesToContentEnabled()) {
             clipRestoreCount = canvas.save();
             canvas.clipRect(mViewPortHandler.getContentRect());
@@ -492,6 +497,19 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
                 offsetRight += mAxisRight.getRequiredWidthSpace(mAxisRendererRight
                         .getPaintAxisLabels());
             }
+
+            // 计算单位区域高度, // 仅在XAxisPosition不显示在顶部是生效
+//            if(XAxisPosition.TOP != mXAxis.getPosition()){
+            float leftUnitHeight = 0, rightUnitHeight = 0;
+            if (!TextUtils.isEmpty(mAxisLeft.getUnit())) {
+                leftUnitHeight = mAxisLeft.getRequiredHeightForUnit(mAxisRendererLeft.getPaintAxisLabels());
+            }
+            if (!TextUtils.isEmpty(mAxisRight.getUnit())) {
+                rightUnitHeight = mAxisRight.getRequiredHeightForUnit(mAxisRendererRight.getPaintAxisLabels());
+            }
+
+            offsetTop += Math.max(leftUnitHeight, rightUnitHeight);
+//            }
 
             if (mXAxis.isEnabled() && mXAxis.isDrawLabelsEnabled()) {
 
@@ -1235,8 +1253,8 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
     /**
      * When disabled, the data and/or highlights will not be clipped to contentRect. Disabling this option can
-     *   be useful, when the data lies fully within the content rect, but is drawn in such a way (such as thick lines)
-     *   that there is unwanted clipping.
+     * be useful, when the data lies fully within the content rect, but is drawn in such a way (such as thick lines)
+     * that there is unwanted clipping.
      *
      * @param enabled
      */
@@ -1256,8 +1274,8 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
     /**
      * When disabled, the data and/or highlights will not be clipped to contentRect. Disabling this option can
-     *   be useful, when the data lies fully within the content rect, but is drawn in such a way (such as thick lines)
-     *   that there is unwanted clipping.
+     * be useful, when the data lies fully within the content rect, but is drawn in such a way (such as thick lines)
+     * that there is unwanted clipping.
      *
      * @return
      */

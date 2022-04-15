@@ -2,6 +2,7 @@ package com.github.mikephil.charting.components;
 
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.text.TextUtils;
 
 import com.github.mikephil.charting.utils.Utils;
 
@@ -103,6 +104,32 @@ public class YAxis extends AxisBase {
      * default: Float.POSITIVE_INFINITY (no maximum specified)
      */
     protected float mMaxWidth = Float.POSITIVE_INFINITY;
+
+    protected String mUnit = "MKW";
+    protected float mUnitYOffset = 5.0f;
+
+    public String getUnit() {
+        return mUnit;
+    }
+
+    public void setUnit(String unit) {
+        this.mUnit = mUnit;
+    }
+
+    public float getUnitYOffset() {
+        return mUnitYOffset;
+    }
+
+    public void setUnitYOffset(float unitYOffset) {
+        this.mUnitYOffset = Utils.convertDpToPixel(unitYOffset);
+    }
+
+    public float getRequiredHeightForUnit(Paint paint){
+        paint.setTextSize(mTextSize);
+
+        String label = TextUtils.isEmpty(mUnit) ? "W" : mUnit;
+        return (float) Utils.calcTextHeight(paint, label) + mUnitYOffset * 2f;
+    }
 
     /**
      * Enum that specifies the axis a DataSet should be plotted against, either LEFT or RIGHT.
